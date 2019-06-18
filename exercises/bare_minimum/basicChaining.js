@@ -10,11 +10,15 @@
 
 var fs = require('fs');
 var Promise = require('bluebird');
-
-
+var promiseConstructor = require('./promiseConstructor.js');
+// Promise.promisify(fs); // ASYNC suffixed version
 
 var fetchProfileAndWriteToFile = function(readFilePath, writeFilePath) {
   // TODO
+  // return fs.promiseConstructor.pluckFirstLineFromFileAsync(readFilePath)  
+  //   .then(function(request) {
+  //     return fs.promiseConstructor.getStatusCodeAsync
+  //   })
 };
 
 // Export these functions so we can test them
