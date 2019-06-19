@@ -12,6 +12,7 @@ var fs = require('fs');
 var Promise = require('bluebird');
 var promiseConstructor = require('./promiseConstructor.js');
 var Promisification = require('./promisification.js');
+var writeFileAsync = Promise.promisify(fs.writeFile);
 
 // Promise.promisify(fs); // ASYNC suffixed version
 
@@ -22,29 +23,19 @@ var Promisification = require('./promisification.js');
 
 var fetchProfileAndWriteToFile = function(readFilePath, writeFilePath) {
   // TODO
-  console.log('RFP', readFilePath);
   return promiseConstructor.pluckFirstLineFromFileAsync(readFilePath)  
     .then(function(username) { // send a request to GitHub for user profile
       if(!username) {
-        console.log('DNE');
         throw new Error('Username DNE');
-      }
-      else {
-        console.log('else');
+      } else {
         return username;
       }
     })
-    // .then(function(user) {
-    //   console.log(user);
-    //   return promiseConstructor.getStatusCodeAsync(user);
-    // })
-    .then(function(userProfile) {
-      console.log('more progress')
-      return Promisification.generateRandomTokenAsync();
+    .then(function(user) {
+      return Promisification.getGitHubProfileAsync(user);
     })
-    .then(function(token) {
-      console.log(token);
-      fs.writeFile(writeFilePath, JSON.stringify(token));
+    .then(function(options) {
+      return writeFileAsync(writeFilePath, JSON.stringify(options));
     }); 
 };
 
